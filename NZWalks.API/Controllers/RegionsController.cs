@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NZWalks.API.CustomFilterAttributes;
 using NZWalks.API.Data;
 using NZWalks.API.Models.Domain;
 using NZWalks.API.Models.DTO;
@@ -60,8 +61,10 @@ namespace NZWalks.API.Controllers
             return Ok(mapper.Map<RegionsDTO>(region));
         }
         [HttpPost(Name ="Create Region")]
+        [ValidateModel]
         public async Task<IActionResult> CreateRegionAsync([FromBody] RegionsRequestDTO regionsRequestDTO)
         {
+            //if(!ModelState.IsValid){ return BadRequest(ModelState); }
             Region regionDomainModel = new Region()
             {
                 Name = regionsRequestDTO.Name,
