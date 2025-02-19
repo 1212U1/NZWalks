@@ -29,9 +29,11 @@ namespace NZWalks.API.Controllers
             return Ok(this.mapper.Map<WalksDTO>(walk));
         }
         [HttpGet]
-        public async Task<IActionResult> GetAllAsync()
+        public async Task<IActionResult> GetAllAsync([FromQuery] String? filterField, [FromQuery] String? filterValue
+                                                     , [FromQuery]String? sortField, [FromQuery]Boolean? isAscending
+                                                     , [FromQuery]Int32 pageNumber = 1, [FromQuery]Int32 pageSize=100)
         {
-            List<Walk> walks = await this.walkRepository.GetAllAsync();
+            List<Walk> walks = await this.walkRepository.GetAllAsync(filterField,filterValue,sortField, pageNumber, pageSize,isAscending ?? true);
             return Ok(this.mapper.Map<List<WalksDTO>>(walks));
         }
         [HttpGet]

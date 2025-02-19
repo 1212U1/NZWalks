@@ -31,9 +31,20 @@ namespace NZWalks.API.Repositories
             
         }
 
-        public async Task<List<Walk>> GetAllAsync()
+        public async Task<List<Walk>> GetAllAsync(String? filterField, String? filterValue
+                                                  ,String? sortField, Int32 pageNumber, Int32 pageSize, Boolean isAscending=true)
         {
-            return await this.nZWalksDBContext.Walks.Include("Difficulty").Include("Region").ToListAsync();
+           IQueryable<Walk> walks = this.nZWalksDBContext.Walks.Include("Difficulty").Include("Region").AsQueryable();
+            if (filterField!=null && filterValue != null && filterField.Equals("Name"))
+            {
+                walks = walks.Where(t=>t.Name.Contains(filterValue));
+            }
+            if(!String.IsNullOrEmpty(sortField))
+            {
+                walks = isAscending?walks.OrderBy(x=>x.Name):walks.OrderByDescending(x=>x.Name);
+            }
+            walks = walks.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+           return await walks.ToListAsync();
         }
 
         public async Task<Walk?> GetByIDAsync(Guid id)

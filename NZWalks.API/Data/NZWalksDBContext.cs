@@ -13,7 +13,7 @@ namespace NZWalks.API.Data
         public DbSet<Region> Regions { get; set; }
         public DbSet<Walk> Walks { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        /*protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
@@ -89,6 +89,6 @@ namespace NZWalks.API.Data
             };
 
             modelBuilder.Entity<Region>().HasData(regions);
-        }
+        }*/
     }
 }
