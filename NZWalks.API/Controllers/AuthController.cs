@@ -56,7 +56,7 @@ namespace NZWalks.API.Controllers
                     if (roles.Any()) 
                     {
                         String token = this.tokenGenerator.GenerateToken(identityUser, roles.ToList());
-                        return Ok(token);
+                        return Ok(new JWTTokenDTO { Token=token});
                     }
                 }
             }
