@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using NZWalks.API.CustomFilterAttributes;
 using NZWalks.API.Data;
 using NZWalks.API.Models.Domain;
@@ -17,16 +15,16 @@ namespace NZWalks.API.Controllers
         private readonly NZWalksDBContext dBContext;
         private readonly IRegionRepository regionRepository;
         private readonly IMapper mapper;
-        public RegionsController(NZWalksDBContext nZWalksDBContext,IRegionRepository regionRepository,IMapper mapper)
+        public RegionsController(NZWalksDBContext nZWalksDBContext, IRegionRepository regionRepository, IMapper mapper)
         {
             dBContext = nZWalksDBContext;
             this.regionRepository = regionRepository;
-            this.mapper=mapper;
+            this.mapper = mapper;
         }
         [HttpGet]
         [Route("all")]
-        [Authorize(Roles ="Reader")]
-        public async Task<IActionResult> GetAllAsync() 
+        //[Authorize(Roles ="Reader")]
+        public async Task<IActionResult> GetAllAsync()
         {
             List<Region> regionsModel = await regionRepository.GetAllAsync();
             /*List<RegionsDTO> regionsDTO = new List<RegionsDTO>();
@@ -45,13 +43,13 @@ namespace NZWalks.API.Controllers
         }
         [HttpGet]
         [Route("{id:Guid}")]
-        [Authorize(Roles = "Reader")]
+        //[Authorize(Roles = "Reader")]
 
-        public async Task<IActionResult> GetByIDAsync([FromRoute]Guid id)
+        public async Task<IActionResult> GetByIDAsync([FromRoute] Guid id)
         {
             Region? region = await this.regionRepository.GetByIDAsync(id);
 
-            if(region==null)
+            if (region == null)
             {
                 return NotFound("Region Not found");
             }
@@ -64,9 +62,9 @@ namespace NZWalks.API.Controllers
             });*/
             return Ok(mapper.Map<RegionsDTO>(region));
         }
-        [HttpPost(Name ="Create Region")]
+        [HttpPost(Name = "Create Region")]
         [ValidateModel]
-        [Authorize(Roles = "Writer")]
+        //[Authorize(Roles = "Writer")]
 
         public async Task<IActionResult> CreateRegionAsync([FromBody] RegionsRequestDTO regionsRequestDTO)
         {
@@ -89,9 +87,9 @@ namespace NZWalks.API.Controllers
             //return CreatedAtAction(nameof(GetByIDAsync), new { id=regionsDTO.Id }, regionsDTO);
         }
         [HttpPut]
-        [Authorize(Roles = "Writer")]
+        //[Authorize(Roles = "Writer")]
 
-        public async Task<IActionResult> UpdateRegionAsync([FromBody] RegionsRequestDTO regionsRequestDTO, [FromQuery]Guid regionID)
+        public async Task<IActionResult> UpdateRegionAsync([FromBody] RegionsRequestDTO regionsRequestDTO, [FromQuery] Guid regionID)
         {
             Region? region = await this.regionRepository.UpdateAsync(regionID, regionsRequestDTO);
             if (region == null) { return NotFound("Region not found"); }
@@ -99,14 +97,14 @@ namespace NZWalks.API.Controllers
             {
                 Name = region.Name,
                 Code = region.Code,
-                RegionImageURL= region.RegionImageURL
+                RegionImageURL = region.RegionImageURL
             };
             return Ok(regionsDTO);
         }
         [HttpDelete]
         [Route("{id:guid}")]
-        [Authorize(Roles = "Writer,Reader")]
-        public async Task<IActionResult> DeleteRegion([FromRoute]Guid id)
+        //[Authorize(Roles = "Writer,Reader")]
+        public async Task<IActionResult> DeleteRegion([FromRoute] Guid id)
         {
             Region? region = await this.regionRepository.DeleteAsync(id);
             if (region == null)
